@@ -184,3 +184,26 @@ let b:current_syntax = "typescript"
 if main_syntax == 'typescript'
   unlet main_syntax
 endif
+
+if exists('b:current_syntax')
+   let s:current_syntax=b:current_syntax
+   unlet b:current_syntax
+ endif
+ syn include @XMLSyntax syntax/xml.vim
+ if exists('s:current_syntax')
+   let b:current_syntax=s:current_syntax
+ endif
+
+ syn region xmlString contained start=+{+ end=++ contains=typescriptBlock
+
+ syn region jsxChild contained start=+{+ end=++ contains=typescriptBlock
+   \ extend
+
+ syn region jsxRegion
+   \ contains=@NoSpell,@XMLSyntax,jsxRegion,jsxChild,typescriptBlock
+   \ start=+\%(<\|\w\)\@<!<\z([a-zA-Z][a-zA-Z0-9:\-.]*\>[:,]\@!\)\([^>]*>(\)\@!+
+   \ skip=+<!--\_.\{-}-->+
+   \ end=+</\z1\_\s\{-}>+
+   \ end=+/>+
+   \ keepend
+   \ extend
